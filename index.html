@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Bot & Translator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #f0f2f5; color: #1a1a1a; }
+    header { background: #6c4de6; color: white; padding: 16px 24px; font-size: 20px; font-weight: 600; }
+    .tabs { display: flex; background: white; border-bottom: 2px solid #e5e7eb; }
+    .tab { padding: 14px 28px; cursor: pointer; font-size: 15px; border-bottom: 3px solid transparent; transition: all 0.2s; }
+    .tab.active { border-bottom-color: #6c4de6; color: #6c4de6; font-weight: 600; }
+    .page { display: none; padding: 24px; max-width: 800px; margin: 0 auto; }
+    .page.active { display: block; }
+
+    /* Chat */
+    #chat-box { background: white; border-radius: 12px; padding: 16px; height: 400px; overflow-y: auto; margin-bottom: 12px; border: 1px solid #e5e7eb; }
+    .msg { margin: 8px 0; display: flex; }
+    .msg.user { justify-content: flex-end; }
+    .bubble { max-width: 75%; padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
+    .msg.user .bubble { background: #6c4de6; color: white; border-radius: 12px 12px 2px 12px; }
+    .msg.ai .bubble { background: #f3f4f6; color: #1a1a1a; border-radius: 12px 12px 12px 2px; }
+    .chat-input { display: flex; gap: 8px; }
+    .chat-input input { flex: 1; padding: 12px 16px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none; }
+    .chat-input input:focus { border-color: #6c4de6; }
+    .chat-input button { background: #6c4de6; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    .chat-input button:hover { background: #5a3dcf; }
+
+    /* Translate */
+    .translate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .translate-grid textarea { width: 100%; height: 200px; padding: 14px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 14px; resize: vertical; outline: none; }
+    .translate-grid textarea:focus { border-color: #6c4de6; }
+    select { padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none; margin-bottom: 12px; }
+    .translate-btn { background: #6c4de6; color: white; border: none; padding: 12px 28px; border-radius: 8px; cursor: pointer; font-size: 15px; }
+    .translate-btn:hover { background: #5a3dcf; }
+    .loading { color: #9ca3af; font-size: 13px; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <header>🤖 AI Bot & Translator</header>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('chat')">💬 Chat AI</div>
+    <div class="tab" onclick="switchTab('translate')">🌐 Terjemahan</div>
+  </div>
+
+  <!-- Chat -->
+  <div id="tab-chat" class="page active">
+    <div id="chat-box">
+      <div class="msg ai"><div class="bubble">Halo! Aku asisten AI. Ada yang bisa aku bantu? 😊</div></div>
+    </div>
+    <div class="chat-input">
+      <input id="chat-input" type="text" placeholder="Ketik pesan..." onkeydown="if(event.key==='Enter') sendChat()">
+      <button onclick="sendChat()">Kirim</button>
+    </div>
+  </div>
+
+  <!-- Translate -->
+  <div id="tab-translate" class="page">
+    <label style="font-size:14px; color:#6b7280;">Terjemahkan ke:</label><br>
+    <select id="lang-select">
+      <option>Indonesia</option>
+      <option>English</option>
+      <option>Japanese</option>
+      <option>Korean</option>
+      <option>Arabic</option>
+      <option>Spanish</option>
+      <option>French</option>
+      <option>German</option>
+      <option>Chinese (Simplified)</option>
+      <option>Hindi</option>
+    </select>
+    <div class="translate-grid">
+      <textarea id="translate-input" placeholder="Masukkan teks di sini..."></textarea>
+      <textarea id="translate-output" placeholder="Hasil terjemahan..." readonly></textarea>
+    </div>
+    <button class="translate-btn" onclick="doTranslate()">Terjemahkan</button>
+    <p class="loading" id="translate-status"></p>
+  </div>
+
+  <script>
+    const chatHistory = [];
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', (i === 0) === (tab === 'chat')));
+      document.getElementById('tab-chat').classList.toggle('active', tab === 'chat');
+      document.getElementById('tab-translate').classList.toggle('active', tab === 'translate');
+    }
+
+    async function sendChat() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+
+      addBubble('user', text);
+      chatHistory.push({ role: 'user', content: text });
+
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: chatHistory })
+      });
+      const data = await res.json();
+      addBubble('ai', data.reply);
+      chatHistory.push({ role: 'assistant', content: data.reply });
+    }
+
+    function addBubble(role, text) {
+      const box = document.getElementById('chat-box');
+      const div = document.createElement('div');
+      div.className = `msg ${role}`;
+      div.innerHTML = `<div class="bubble">${text}</div>`;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    async function doTranslate() {
+      const text = document.getElementById('translate-input').value.trim();
+      const lang = document.getElementById('lang-select').value;
+      if (!text) return;
+
+      document.getElementById('translate-status').textContent = 'Menerjemahkan...';
+      document.getElementById('translate-output').value = '';
+
+      const res = await fetch('/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, target_lang: lang })
+      });
+      const data = await res.json();
+      document.getElementById('translate-output').value = data.result;
+      document.getElementById('translate-status').textContent = '';
+    }
+  </script>
+</body>
+</html>
