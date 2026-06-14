@@ -20,7 +20,7 @@ def chat():
         # Batasi hanya 10 pesan terakhir biar tidak kebesaran
         messages = messages[-10:]
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile ",
+            model="groq/compound",
             messages=[{"role": "system", "content": "Kamu adalah asisten AI yang ramah dan membantu. Jawab dalam bahasa yang sama dengan pengguna."}] + messages
         )
         reply = str(response.choices[0].message.content)
@@ -35,7 +35,7 @@ def translate():
         text = data.get("text", "")
         target_lang = data.get("target_lang", "English")
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile ",
+            model="groq/compound",
             messages=[
                 {"role": "system", "content": "Kamu adalah penerjemah profesional. Terjemahkan teks ke bahasa target. Balas HANYA terjemahannya saja."},
                 {"role": "user", "content": f"Terjemahkan ke {target_lang}:\n\n{text}"}
