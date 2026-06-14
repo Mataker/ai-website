@@ -17,6 +17,8 @@ def chat():
     try:
         data = request.json
         messages = data.get("messages", [])
+        # Batasi hanya 10 pesan terakhir biar tidak kebesaran
+        messages = messages[-10:]
         response = client.chat.completions.create(
             model="compound-beta",
             messages=[{"role": "system", "content": "Kamu adalah asisten AI yang ramah dan membantu. Jawab dalam bahasa yang sama dengan pengguna."}] + messages
