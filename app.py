@@ -21,17 +21,7 @@ def chat():
             model="compound-beta",
             messages=[{"role": "system", "content": "Kamu adalah asisten AI yang ramah dan membantu. Jawab dalam bahasa yang sama dengan pengguna."}] + messages
         )
-        # compound-beta kadang reply ada di content, kadang di tool
-        reply = ""
-        for block in response.choices[0].message.content if isinstance(response.choices[0].message.content, list) else [response.choices[0].message]:
-            if hasattr(block, 'text'):
-                reply += block.text
-            elif hasattr(block, 'content') and isinstance(block.content, str):
-                reply += block.content
-            elif isinstance(block, str):
-                reply += block
-        if not reply:
-            reply = str(response.choices[0].message.content)
+        reply = str(response.choices[0].message.content)
         return jsonify({"reply": reply})
     except Exception as e:
         return jsonify({"reply": f"Error: {str(e)}"}), 500
@@ -45,7 +35,7 @@ def translate():
         response = client.chat.completions.create(
             model="compound-beta",
             messages=[
-                {"role": "system", "content": "Kamu adalah penerjemah profesional. Terjemahkan teks yang diberikan ke bahasa target. Balas HANYA dengan terjemahannya saja, tanpa penjelasan tambahan."},
+                {"role": "system", "content": "Kamu adalah penerjemah profesional. Terjemahkan teks ke bahasa target. Balas HANYA terjemahannya saja."},
                 {"role": "user", "content": f"Terjemahkan ke {target_lang}:\n\n{text}"}
             ]
         )
@@ -55,4 +45,5 @@ def translate():
         return jsonify({"result": f"Error: {str(e)}"}), 500
 
 if __name__ == "__main__":
-    app.run(debug=False, port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=False, host="0.0.0.0", port=port)
