@@ -18,7 +18,7 @@ def chat():
     messages = data.get("messages", [])
 
     response = client.chat.completions.create(
-        model="openai/gpt-oss-120b",
+        model="compound-beta",
         messages=[{"role": "system", "content": "Kamu adalah asisten AI yang ramah dan membantu. Jawab dalam bahasa yang sama dengan pengguna."}] + messages
     )
     return jsonify({"reply": response.choices[0].message.content})
@@ -30,7 +30,7 @@ def translate():
     target_lang = data.get("target_lang", "English")
 
     response = client.chat.completions.create(
-        model="openai/gpt-oss-120b",
+        model="compound-beta",
         messages=[
             {"role": "system", "content": "Kamu adalah penerjemah profesional. Terjemahkan teks yang diberikan ke bahasa target. Balas HANYA dengan terjemahannya saja, tanpa penjelasan tambahan."},
             {"role": "user", "content": f"Terjemahkan ke {target_lang}:\n\n{text}"}
