@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from google import genai
-from google.genai import types
+from openai import OpenAI
 import os
 from dotenv import load_dotenv
 
@@ -10,7 +9,10 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+client = OpenAI(
+    api_key=os.environ.get("ZHIPU_API_KEY"),
+    base_url="https://api.z.ai/api/paas/v4/"
+)
 
 @app.route("/")
 def index():
@@ -22,22 +24,11 @@ def chat():
         data = request.json
         messages = data.get("messages", [])
         messages = messages[-10:]
-
-        # Convert format ke Gemini
-        contents = []
-        for m in messages:
-            role = "user" if m["role"] == "user" else "model"
-            contents.append(types.Content(role=role, parts=[types.Part(text=m["content"])]))
-
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=contents,
-            config=types.GenerateContentConfig(
-                system_instruction="Kamu adalah asisten AI yang ramah dan membantu. Jawab dalam bahasa yang sama dengan pengguna.",
-                tools=[types.Tool(google_search=types.GoogleSearch())]
-            )
+        response = client.chat.completions.create(
+            model="glm-4.7-flash",
+            messages=[{"role": "system", "content": "Kamu adalah asisten AI yang ramah dan membantu. Jawab dalam bahasa yang sama dengan pengguna."}] + messages
         )
-        reply = response.text
+        reply = response.choices[0].message.content
         return jsonify({"reply": reply})
     except Exception as e:
         return jsonify({"reply": f"Error: {str(e)}"}), 500
@@ -48,15 +39,14 @@ def translate():
         data = request.json
         text = data.get("text", "")
         target_lang = data.get("target_lang", "English")
-
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=f"Terjemahkan ke {target_lang}:\n\n{text}",
-            config=types.GenerateContentConfig(
-                system_instruction="Kamu adalah penerjemah profesional. Balas HANYA dengan terjemahannya saja, tanpa penjelasan tambahan."
-            )
+        response = client.chat.completions.create(
+            model="glm-4.7-flash",
+            messages=[
+                {"role": "system", "content": "Kamu adalah penerjemah profesional. Terjemahkan teks ke bahasa target. Balas HANYA terjemahannya saja."},
+                {"role": "user", "content": f"Terjemahkan ke {target_lang}:\n\n{text}"}
+            ]
         )
-        result = response.text
+        result = response.choices[0].message.content
         return jsonify({"result": result})
     except Exception as e:
         return jsonify({"result": f"Error: {str(e)}"}), 500
