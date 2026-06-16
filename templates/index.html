@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="id">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HILA AI</title>
+  <title>HILA</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: #f5f4ef; color: #1a1a1a; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+
+    .logo-mark { width: 100%; height: 100%; display: block; }
 
     /* Top navbar (mobile) */
     .topnav {
@@ -19,8 +21,8 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     }
     .topnav .logo { display: flex; align-items: center; gap: 8px; }
-    .topnav .logo-icon { width: 28px; height: 28px; background: #c96442; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 13px; }
-    .topnav .logo-text { font-size: 15px; font-weight: 600; }
+    .topnav .logo-icon { width: 28px; height: 28px; background: #c96442; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 5px; }
+    .topnav .logo-text { font-size: 15px; font-weight: 600; letter-spacing: 0.5px; }
     .menu-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: #4a4a4a; padding: 4px; }
 
     /* Sidebar */
@@ -30,12 +32,9 @@
       display: flex; flex-direction: column; padding: 16px 12px;
       z-index: 200; transition: transform 0.25s ease;
     }
-    .sidebar-logo {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 12px; margin-bottom: 8px;
-    }
-    .logo-icon { width: 32px; height: 32px; background: #c96442; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: 700; }
-    .logo-text { font-size: 16px; font-weight: 600; }
+    .sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 8px 12px; margin-bottom: 8px; }
+    .logo-icon { width: 32px; height: 32px; background: #c96442; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 6px; flex-shrink: 0; }
+    .logo-text { font-size: 17px; font-weight: 600; letter-spacing: 0.5px; }
 
     .new-chat-btn {
       display: flex; align-items: center; gap: 8px;
@@ -61,11 +60,9 @@
     .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #c96442, #e8956d); display: flex; align-items: center; justify-content: center; color: white; font-size: 13px; font-weight: 600; flex-shrink: 0; }
     .user-name { font-size: 13px; font-weight: 500; }
 
-    /* Overlay */
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 150; }
     .overlay.show { display: block; }
 
-    /* Main */
     .main { margin-left: 260px; display: flex; flex-direction: column; height: 100dvh; }
 
     .topbar {
@@ -77,17 +74,15 @@
     .tab-btn { padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; color: #6b6b5a; border: none; background: transparent; font-family: 'Inter', sans-serif; transition: all 0.15s; }
     .tab-btn.active { background: white; color: #1a1a1a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
-    /* Pages */
     .page { display: none; flex: 1; flex-direction: column; overflow: hidden; }
     .page.active { display: flex; }
 
-    /* Chat */
     #chat-messages { flex: 1; overflow-y: auto; padding: 24px 0; scroll-behavior: smooth; }
     #chat-messages::-webkit-scrollbar { width: 4px; }
     #chat-messages::-webkit-scrollbar-thumb { background: #c8c5bc; border-radius: 4px; }
 
     .welcome { text-align: center; padding: 60px 24px 32px; }
-    .welcome-icon { width: 52px; height: 52px; background: #c96442; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: 700; margin: 0 auto 16px; }
+    .welcome-icon { width: 52px; height: 52px; background: #c96442; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; padding: 11px; }
     .welcome h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
     .welcome p { font-size: 14px; color: #6b6b5a; }
 
@@ -97,7 +92,7 @@
     .msg-user .bubble { background: #e8e6de; padding: 11px 15px; border-radius: 18px 18px 4px 18px; font-size: 15px; line-height: 1.6; max-width: 80%; }
 
     .msg-ai { display: flex; gap: 10px; align-items: flex-start; margin: 10px 0; }
-    .ai-avatar { width: 30px; height: 30px; background: #c96442; border-radius: 7px; display: flex; align-items: center; justify-content: center; color: white; font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+    .ai-avatar { width: 30px; height: 30px; background: #c96442; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; padding: 6px; }
     .msg-ai .bubble { font-size: 15px; line-height: 1.75; max-width: 85%; padding-top: 2px; }
     .msg-ai .bubble p { margin-bottom: 10px; }
     .msg-ai .bubble ul, .msg-ai .bubble ol { margin: 8px 0 8px 20px; }
@@ -121,7 +116,6 @@
     .send-btn:disabled { background: #d9d7ce; cursor: not-allowed; }
     .input-hint { text-align: center; font-size: 11px; color: #9a9a8a; margin-top: 6px; }
 
-    /* Translate */
     #tab-translate .scroll-wrap { flex: 1; overflow-y: auto; padding: 24px 20px; }
     .translate-title { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
     .translate-sub { font-size: 13px; color: #6b6b5a; margin-bottom: 20px; }
@@ -142,7 +136,6 @@
     .do-translate:disabled { background: #d9d7ce; cursor: not-allowed; }
     .t-status { font-size: 12px; color: #9a9a8a; margin-top: 8px; min-height: 18px; }
 
-    /* MOBILE */
     @media (max-width: 768px) {
       .topnav { display: flex; }
       .sidebar { transform: translateX(-100%); top: 0; }
@@ -153,12 +146,9 @@
       .input-area { padding: 10px 12px 16px; }
       .welcome { padding: 40px 16px 24px; }
       .welcome h1 { font-size: 18px; }
-
-      /* Stack translate vertically on mobile */
       .translate-grid { grid-template-columns: 1fr; }
       .t-box textarea { height: 160px; }
       #tab-translate .scroll-wrap { padding: 16px 12px; }
-
       .msg-user .bubble { max-width: 90%; font-size: 14px; }
       .msg-ai .bubble { font-size: 14px; }
       .input-box textarea { font-size: 14px; }
@@ -168,23 +158,24 @@
 </head>
 <body>
 
-  <!-- Mobile top nav -->
   <div class="topnav">
     <div class="logo">
-      <div class="logo-icon">A</div>
-      <div class="logo-text">AI Assistant</div>
+      <div class="logo-icon">
+        <svg class="logo-mark" viewBox="0 0 46 46"><circle cx="23" cy="16" r="6" fill="white"/><path d="M11 32 Q23 22 35 32" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="38" cy="10" r="3.5" fill="#f4a98c"/></svg>
+      </div>
+      <div class="logo-text">HILA</div>
     </div>
     <button class="menu-btn" onclick="toggleSidebar()">☰</button>
   </div>
 
-  <!-- Overlay -->
   <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-icon">A</div>
-      <div class="logo-text">AI Assistant</div>
+      <div class="logo-icon">
+        <svg class="logo-mark" viewBox="0 0 46 46"><circle cx="23" cy="16" r="6" fill="white"/><path d="M11 32 Q23 22 35 32" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="38" cy="10" r="3.5" fill="#f4a98c"/></svg>
+      </div>
+      <div class="logo-text">HILA</div>
     </div>
     <button class="new-chat-btn" onclick="newChat()">✏️ Chat baru</button>
     <div class="sidebar-section">Menu</div>
@@ -202,7 +193,6 @@
     </div>
   </div>
 
-  <!-- Main -->
   <div class="main">
     <div class="topbar">
       <div class="model-label">⚡ HILA 2.8</div>
@@ -212,11 +202,12 @@
       </div>
     </div>
 
-    <!-- Chat -->
     <div id="tab-chat" class="page active">
       <div id="chat-messages">
         <div class="welcome" id="welcome-msg">
-          <div class="welcome-icon">A</div>
+          <div class="welcome-icon">
+            <svg class="logo-mark" viewBox="0 0 46 46"><circle cx="23" cy="16" r="6" fill="white"/><path d="M11 32 Q23 22 35 32" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="38" cy="10" r="3.5" fill="#f4a98c"/></svg>
+          </div>
           <h1>Halo! Ada yang bisa aku bantu?</h1>
           <p>Tanyakan apa saja — aku siap membantu kamu.</p>
         </div>
@@ -233,7 +224,6 @@
       </div>
     </div>
 
-    <!-- Translate -->
     <div id="tab-translate" class="page">
       <div class="scroll-wrap">
         <div class="translate-title">Penerjemah Teks</div>
@@ -302,7 +292,9 @@
       chatHistory.length = 0;
       document.getElementById('chat-messages').innerHTML = `
         <div class="welcome" id="welcome-msg">
-          <div class="welcome-icon">A</div>
+          <div class="welcome-icon">
+            <svg class="logo-mark" viewBox="0 0 46 46"><circle cx="23" cy="16" r="6" fill="white"/><path d="M11 32 Q23 22 35 32" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="38" cy="10" r="3.5" fill="#f4a98c"/></svg>
+          </div>
           <h1>Halo! Ada yang bisa aku bantu?</h1>
           <p>Tanyakan apa saja — aku siap membantu kamu.</p>
         </div>`;
@@ -355,7 +347,7 @@
       const box = document.getElementById('chat-messages');
       const row = document.createElement('div');
       row.className = 'message-row';
-      row.innerHTML = `<div class="msg-ai"><div class="ai-avatar">A</div><div class="bubble">${marked.parse(text)}</div></div>`;
+      row.innerHTML = `<div class="msg-ai"><div class="ai-avatar"><svg class="logo-mark" viewBox="0 0 46 46"><circle cx="23" cy="16" r="6" fill="white"/><path d="M11 32 Q23 22 35 32" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="38" cy="10" r="3.5" fill="#f4a98c"/></svg></div><div class="bubble">${marked.parse(text)}</div></div>`;
       box.appendChild(row);
       box.scrollTop = box.scrollHeight;
     }
@@ -364,7 +356,7 @@
       const box = document.getElementById('chat-messages');
       const row = document.createElement('div');
       row.className = 'message-row';
-      row.innerHTML = `<div class="msg-ai"><div class="ai-avatar">A</div><div class="bubble"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>`;
+      row.innerHTML = `<div class="msg-ai"><div class="ai-avatar"><svg class="logo-mark" viewBox="0 0 46 46"><circle cx="23" cy="16" r="6" fill="white"/><path d="M11 32 Q23 22 35 32" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="38" cy="10" r="3.5" fill="#f4a98c"/></svg></div><div class="bubble"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>`;
       box.appendChild(row);
       box.scrollTop = box.scrollHeight;
       return row;
@@ -397,4 +389,3 @@
   </script>
 </body>
 </html>
-
