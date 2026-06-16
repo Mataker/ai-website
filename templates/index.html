@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Assistant</title>
+  <title>HILA AI</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -98,6 +99,11 @@
     .msg-ai { display: flex; gap: 10px; align-items: flex-start; margin: 10px 0; }
     .ai-avatar { width: 30px; height: 30px; background: #c96442; border-radius: 7px; display: flex; align-items: center; justify-content: center; color: white; font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
     .msg-ai .bubble { font-size: 15px; line-height: 1.75; max-width: 85%; padding-top: 2px; }
+    .msg-ai .bubble p { margin-bottom: 10px; }
+    .msg-ai .bubble ul, .msg-ai .bubble ol { margin: 8px 0 8px 20px; }
+    .msg-ai .bubble li { margin-bottom: 4px; }
+    .msg-ai .bubble strong { font-weight: 600; }
+    .msg-ai .bubble code { background: #e8e6de; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
 
     .typing-dots { display: flex; gap: 4px; padding: 6px 0; }
     .dot { width: 6px; height: 6px; border-radius: 50%; background: #9a9a8a; animation: bounce 1.2s infinite; }
@@ -199,7 +205,7 @@
   <!-- Main -->
   <div class="main">
     <div class="topbar">
-      <div class="model-label">⚡ LLaMA 3 · Groq</div>
+      <div class="model-label">⚡ HILA 2.8</div>
       <div class="tab-switcher">
         <button class="tab-btn active" onclick="switchTab('chat')">💬 Chat</button>
         <button class="tab-btn" onclick="switchTab('translate')">🌐 Terjemahan</button>
@@ -349,7 +355,7 @@
       const box = document.getElementById('chat-messages');
       const row = document.createElement('div');
       row.className = 'message-row';
-      row.innerHTML = `<div class="msg-ai"><div class="ai-avatar">A</div><div class="bubble">${text}</div></div>`;
+      row.innerHTML = `<div class="msg-ai"><div class="ai-avatar">A</div><div class="bubble">${marked.parse(text)}</div></div>`;
       box.appendChild(row);
       box.scrollTop = box.scrollHeight;
     }

@@ -1,12 +1,16 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from groq import Groq
+from google import genai
+from google.genai import types
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 @app.route("/")
 def index():
@@ -17,13 +21,23 @@ def chat():
     try:
         data = request.json
         messages = data.get("messages", [])
-        # Batasi hanya 10 pesan terakhir biar tidak kebesaran
         messages = messages[-10:]
-        response = client.chat.completions.create(
-            model="groq/compound",
-            messages=[{"role": "system", "content": "Kamu adalah asisten AI yang ramah dan membantu. Jawab dalam bahasa yang sama dengan pengguna."}] + messages
+
+        # Convert format ke Gemini
+        contents = []
+        for m in messages:
+            role = "user" if m["role"] == "user" else "model"
+            contents.append(types.Content(role=role, parts=[types.Part(text=m["content"])]))
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=contents,
+            config=types.GenerateContentConfig(
+                system_instruction="Kamu adalah asisten AI yang ramah dan membantu. Jawab dalam bahasa yang sama dengan pengguna.",
+                tools=[types.Tool(google_search=types.GoogleSearch())]
+            )
         )
-        reply = str(response.choices[0].message.content)
+        reply = response.text
         return jsonify({"reply": reply})
     except Exception as e:
         return jsonify({"reply": f"Error: {str(e)}"}), 500
@@ -34,14 +48,15 @@ def translate():
         data = request.json
         text = data.get("text", "")
         target_lang = data.get("target_lang", "English")
-        response = client.chat.completions.create(
-            model="groq/compound",
-            messages=[
-                {"role": "system", "content": "Kamu adalah penerjemah profesional. Terjemahkan teks ke bahasa target. Balas HANYA terjemahannya saja."},
-                {"role": "user", "content": f"Terjemahkan ke {target_lang}:\n\n{text}"}
-            ]
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=f"Terjemahkan ke {target_lang}:\n\n{text}",
+            config=types.GenerateContentConfig(
+                system_instruction="Kamu adalah penerjemah profesional. Balas HANYA dengan terjemahannya saja, tanpa penjelasan tambahan."
+            )
         )
-        result = str(response.choices[0].message.content)
+        result = response.text
         return jsonify({"result": result})
     except Exception as e:
         return jsonify({"result": f"Error: {str(e)}"}), 500
