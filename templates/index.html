@@ -10,7 +10,32 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: #0d0d12; color: #e9e9ee; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
 
-    .logo-mark { width: 100%; height: 100%; display: block; }
+    .hila-mark { width: 100%; height: 100%; display: block; }
+
+    .name-modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 999; padding: 20px;
+    }
+    .name-modal {
+      background: #14141b; border: 1px solid #2d2b3d; border-radius: 18px;
+      padding: 36px 32px; max-width: 380px; width: 100%; text-align: center;
+    }
+    .name-modal .avatar-big { width: 72px; height: 72px; margin: 0 auto 18px; }
+    .name-modal h2 { font-size: 20px; font-weight: 600; color: #f5f4ef; margin-bottom: 8px; }
+    .name-modal p { font-size: 14px; color: #9a98a8; margin-bottom: 20px; line-height: 1.5; }
+    .name-modal input {
+      width: 100%; background: #1c1c26; border: 1px solid #2d2b3d; color: #f5f4ef;
+      padding: 12px 16px; border-radius: 10px; font-size: 15px; outline: none;
+      font-family: 'Inter', sans-serif; margin-bottom: 14px; text-align: center;
+    }
+    .name-modal input:focus { border-color: #7F77DD; }
+    .name-modal button {
+      width: 100%; background: #7F77DD; color: white; border: none;
+      padding: 12px; border-radius: 10px; font-size: 15px; font-weight: 500;
+      cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s;
+    }
+    .name-modal button:hover { background: #6a62c9; }
 
     .topnav {
       display: none;
@@ -20,48 +45,62 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     }
     .topnav .logo { display: flex; align-items: center; gap: 8px; }
-    .topnav .logo-icon { width: 28px; height: 28px; background: #7F77DD; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 5px; }
+    .topnav .logo-icon { width: 28px; height: 28px; flex-shrink: 0; }
     .topnav .logo-text { font-size: 15px; font-weight: 600; letter-spacing: 0.5px; color: #f5f4ef; }
     .menu-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: #9a98a8; padding: 4px; }
 
     .sidebar {
-      position: fixed; left: 0; top: 0; bottom: 0; width: 260px;
+      position: fixed; left: 0; top: 0; bottom: 0; width: 270px;
       background: #14141b; border-right: 1px solid #232330;
       display: flex; flex-direction: column; padding: 16px 12px;
       z-index: 200; transition: transform 0.25s ease;
     }
     .sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 8px 12px; margin-bottom: 8px; }
-    .logo-icon { width: 32px; height: 32px; background: #7F77DD; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 6px; flex-shrink: 0; }
+    .logo-icon { width: 32px; height: 32px; flex-shrink: 0; }
     .logo-text { font-size: 17px; font-weight: 600; letter-spacing: 0.5px; color: #f5f4ef; }
 
     .new-chat-btn {
       display: flex; align-items: center; gap: 8px;
       padding: 10px 12px; border-radius: 8px; cursor: pointer;
       font-size: 14px; color: #c8c6d4; border: 1px solid #232330; background: transparent;
-      width: 100%; text-align: left; font-family: 'Inter', sans-serif; margin-bottom: 16px;
+      width: 100%; text-align: left; font-family: 'Inter', sans-serif; margin-bottom: 12px;
       transition: background 0.15s, border-color 0.15s;
     }
     .new-chat-btn:hover { background: #1c1c26; border-color: #7F77DD; }
 
-    .sidebar-section { font-size: 11px; color: #6b6978; padding: 4px 12px; margin-bottom: 4px; letter-spacing: 0.4px; text-transform: uppercase; }
-    .nav-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 9px 12px; border-radius: 8px; cursor: pointer;
-      font-size: 14px; color: #c8c6d4; transition: background 0.15s;
-    }
-    .nav-item:hover { background: #1c1c26; }
-    .nav-item.active { background: #1c1c26; color: #f5f4ef; font-weight: 500; border: 1px solid #2d2b3d; }
+    .sidebar-section { font-size: 11px; color: #6b6978; padding: 8px 12px 4px; letter-spacing: 0.4px; text-transform: uppercase; }
 
-    .sidebar-bottom { margin-top: auto; border-top: 1px solid #232330; padding-top: 12px; }
-    .user-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
-    .user-row:hover { background: #1c1c26; }
+    .history-list { flex: 1; overflow-y: auto; }
+    .history-list::-webkit-scrollbar { width: 4px; }
+    .history-list::-webkit-scrollbar-thumb { background: #2d2b3d; border-radius: 4px; }
+
+    .history-item {
+      display: flex; align-items: center; justify-content: space-between; gap: 6px;
+      padding: 9px 12px; border-radius: 8px; cursor: pointer;
+      font-size: 13px; color: #c8c6d4; transition: background 0.15s;
+      margin-bottom: 2px;
+    }
+    .history-item:hover { background: #1c1c26; }
+    .history-item.active { background: #1c1c26; color: #f5f4ef; border: 1px solid #2d2b3d; }
+    .history-item .title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+    .history-item .del-btn { background: none; border: none; color: #6b6978; cursor: pointer; font-size: 13px; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
+    .history-item .del-btn:hover { color: #e24b4a; background: #2d2b3d; }
+
+    .nav-tabs { display: flex; gap: 4px; padding: 4px; background: #1c1c26; border-radius: 8px; margin-bottom: 12px; }
+    .nav-tab-btn { flex: 1; padding: 7px 8px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; color: #9a98a8; border: none; background: transparent; font-family: 'Inter', sans-serif; transition: all 0.15s; }
+    .nav-tab-btn.active { background: #2d2b3d; color: #f5f4ef; }
+
+    .sidebar-bottom { margin-top: 12px; border-top: 1px solid #232330; padding-top: 12px; }
+    .user-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; }
     .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #2d2b3d; display: flex; align-items: center; justify-content: center; color: #c8c6d4; font-size: 13px; font-weight: 600; flex-shrink: 0; }
-    .user-name { font-size: 13px; font-weight: 500; color: #f5f4ef; }
+    .user-name { font-size: 13px; font-weight: 500; color: #f5f4ef; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .switch-user-btn { background: none; border: none; color: #6b6978; cursor: pointer; font-size: 12px; }
+    .switch-user-btn:hover { color: #c8c6d4; }
 
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 150; }
     .overlay.show { display: block; }
 
-    .main { margin-left: 260px; display: flex; flex-direction: column; height: 100dvh; background: #0d0d12; }
+    .main { margin-left: 270px; display: flex; flex-direction: column; height: 100dvh; background: #0d0d12; }
 
     .topbar {
       display: flex; align-items: center; justify-content: space-between;
@@ -69,9 +108,12 @@
     }
     .model-label { font-size: 14px; font-weight: 500; color: #c8c6d4; display: flex; align-items: center; gap: 6px; }
     .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; display: inline-block; }
-    .tab-switcher { display: flex; gap: 4px; background: #1c1c26; border-radius: 8px; padding: 3px; border: 1px solid #232330; }
-    .tab-btn { padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; color: #9a98a8; border: none; background: transparent; font-family: 'Inter', sans-serif; transition: all 0.15s; }
-    .tab-btn.active { background: #2d2b3d; color: #f5f4ef; }
+
+    .web-toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #9a98a8; cursor: pointer; user-select: none; }
+    .web-toggle .switch { width: 36px; height: 20px; background: #2d2b3d; border-radius: 10px; position: relative; transition: background 0.2s; }
+    .web-toggle .switch::after { content: ''; width: 16px; height: 16px; background: #9a98a8; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: transform 0.2s, background 0.2s; }
+    .web-toggle.on .switch { background: #7F77DD; }
+    .web-toggle.on .switch::after { transform: translateX(16px); background: white; }
 
     .page { display: none; flex: 1; flex-direction: column; overflow: hidden; }
     .page.active { display: flex; }
@@ -80,24 +122,38 @@
     #chat-messages::-webkit-scrollbar { width: 4px; }
     #chat-messages::-webkit-scrollbar-thumb { background: #2d2b3d; border-radius: 4px; }
 
-    .welcome { text-align: center; padding: 60px 24px 32px; }
-    .welcome-icon { width: 52px; height: 52px; background: #7F77DD; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; padding: 11px; }
+    .welcome { text-align: center; padding: 50px 24px 32px; }
+    .welcome-icon { width: 64px; height: 64px; margin: 0 auto 16px; }
     .welcome h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; color: #f5f4ef; }
     .welcome p { font-size: 14px; color: #9a98a8; }
 
     .message-row { max-width: 720px; margin: 0 auto; width: 100%; padding: 4px 20px; }
 
     .msg-user { display: flex; justify-content: flex-end; margin: 4px 0; }
-    .msg-user .bubble { background: #1c1c26; border: 1px solid #2d2b3d; color: #f5f4ef; padding: 11px 15px; border-radius: 14px 14px 4px 14px; font-size: 15px; line-height: 1.6; max-width: 80%; }
+    .msg-user-wrap { display: flex; flex-direction: column; align-items: flex-end; max-width: 80%; }
+    .msg-user .bubble { background: #1c1c26; border: 1px solid #2d2b3d; color: #f5f4ef; padding: 11px 15px; border-radius: 14px 14px 4px 14px; font-size: 15px; line-height: 1.6; }
+    .msg-user textarea.edit-box { width: 100%; background: #1c1c26; border: 1px solid #7F77DD; color: #f5f4ef; padding: 11px 15px; border-radius: 14px; font-size: 15px; line-height: 1.6; font-family: 'Inter', sans-serif; resize: none; outline: none; }
+    .user-actions { display: flex; gap: 4px; margin-top: 4px; opacity: 0; transition: opacity 0.15s; }
+    .msg-user-wrap:hover .user-actions { opacity: 1; }
+    .edit-confirm-row { display: flex; gap: 6px; margin-top: 6px; }
 
     .msg-ai { display: flex; gap: 10px; align-items: flex-start; margin: 10px 0; }
-    .ai-avatar { width: 30px; height: 30px; background: #7F77DD; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; padding: 6px; }
-    .msg-ai .bubble { font-size: 15px; line-height: 1.75; max-width: 85%; padding-top: 2px; color: #d8d6e2; }
+    .ai-avatar { width: 30px; height: 30px; flex-shrink: 0; margin-top: 2px; }
+    .msg-ai-wrap { display: flex; flex-direction: column; max-width: 85%; }
+    .msg-ai .bubble { font-size: 15px; line-height: 1.75; padding-top: 2px; color: #d8d6e2; }
     .msg-ai .bubble p { margin-bottom: 10px; }
     .msg-ai .bubble ul, .msg-ai .bubble ol { margin: 8px 0 8px 20px; }
     .msg-ai .bubble li { margin-bottom: 4px; }
     .msg-ai .bubble strong { font-weight: 600; color: #f5f4ef; }
     .msg-ai .bubble code { background: #1c1c26; border: 1px solid #2d2b3d; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #c4b5fd; }
+    .ai-actions { display: flex; gap: 4px; margin-top: 2px; opacity: 0; transition: opacity 0.15s; }
+    .msg-ai:hover .ai-actions { opacity: 1; }
+
+    .icon-btn { background: none; border: none; color: #6b6978; cursor: pointer; font-size: 12px; padding: 4px 7px; border-radius: 6px; display: flex; align-items: center; gap: 4px; font-family: 'Inter', sans-serif; }
+    .icon-btn:hover { color: #c8c6d4; background: #1c1c26; }
+    .icon-btn.copied { color: #4ade80; }
+    .icon-btn.confirm-yes { color: #4ade80; background: #1c1c26; }
+    .icon-btn.confirm-no { color: #e24b4a; background: #1c1c26; }
 
     .typing-dots { display: flex; gap: 4px; padding: 6px 0; }
     .dot { width: 6px; height: 6px; border-radius: 50%; background: #6b6978; animation: bounce 1.2s infinite; }
@@ -106,10 +162,15 @@
     @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
 
     .input-area { padding: 12px 20px 20px; max-width: 720px; margin: 0 auto; width: 100%; flex-shrink: 0; }
+    .mobile-web-toggle { display: none; margin-bottom: 8px; }
     .input-box { background: #14141b; border: 1px solid #2d2b3d; border-radius: 14px; padding: 10px 12px; display: flex; align-items: flex-end; gap: 8px; transition: border-color 0.2s; }
     .input-box:focus-within { border-color: #7F77DD; }
     .input-box textarea { flex: 1; border: none; outline: none; resize: none; font-size: 15px; font-family: 'Inter', sans-serif; color: #f5f4ef; background: transparent; max-height: 120px; line-height: 1.5; padding: 2px 0; }
     .input-box textarea::placeholder { color: #6b6978; }
+    .mic-btn { width: 34px; height: 34px; border-radius: 8px; border: none; background: #1c1c26; color: #9a98a8; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; transition: all 0.15s; }
+    .mic-btn:hover { background: #2d2b3d; }
+    .mic-btn.recording { background: #e24b4a; color: white; animation: pulse 1.2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
     .send-btn { width: 34px; height: 34px; border-radius: 8px; border: none; background: #7F77DD; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; transition: background 0.15s; }
     .send-btn:hover { background: #6a62c9; }
     .send-btn:disabled { background: #2d2b3d; cursor: not-allowed; }
@@ -141,27 +202,38 @@
       .sidebar.open { transform: translateX(0); }
       .main { margin-left: 0; padding-top: 54px; }
       .topbar { display: none; }
+      .mobile-web-toggle { display: flex; justify-content: center; }
       .message-row { padding: 4px 12px; }
       .input-area { padding: 10px 12px 16px; }
-      .welcome { padding: 40px 16px 24px; }
+      .welcome { padding: 36px 16px 24px; }
       .welcome h1 { font-size: 18px; }
       .translate-grid { grid-template-columns: 1fr; }
       .t-box textarea { height: 160px; }
       #tab-translate .scroll-wrap { padding: 16px 12px; }
-      .msg-user .bubble { max-width: 90%; font-size: 14px; }
+      .msg-user .bubble { font-size: 14px; }
       .msg-ai .bubble { font-size: 14px; }
       .input-box textarea { font-size: 14px; }
       .input-hint { display: none; }
+      .user-actions { opacity: 1; }
+      .ai-actions { opacity: 1; }
     }
   </style>
 </head>
 <body>
 
+  <div class="name-modal-overlay" id="name-modal">
+    <div class="name-modal">
+      <div class="avatar-big" id="modal-avatar"></div>
+      <h2>Halo! Aku HILA</h2>
+      <p>Sebelum mulai ngobrol, boleh kenalan dulu? Siapa nama kamu?</p>
+      <input type="text" id="name-input" placeholder="Tulis nama kamu di sini..." autocomplete="off" onkeydown="if(event.key==='Enter') submitName()">
+      <button onclick="submitName()">Mulai ngobrol</button>
+    </div>
+  </div>
+
   <div class="topnav">
     <div class="logo">
-      <div class="logo-icon">
-        <svg class="logo-mark" viewBox="0 0 48 48"><circle cx="24" cy="17" r="3.2" fill="#0d0d12"/><circle cx="14" cy="30" r="3.2" fill="#0d0d12"/><circle cx="34" cy="30" r="3.2" fill="#0d0d12"/><path d="M14 30 L24 17 L34 30" stroke="#0d0d12" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
+      <div class="logo-icon" id="topnav-avatar"></div>
       <div class="logo-text">HILA</div>
     </div>
     <button class="menu-btn" onclick="toggleSidebar()">☰</button>
@@ -171,52 +243,57 @@
 
   <div class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-icon">
-        <svg class="logo-mark" viewBox="0 0 48 48"><circle cx="24" cy="17" r="3.2" fill="#0d0d12"/><circle cx="14" cy="30" r="3.2" fill="#0d0d12"/><circle cx="34" cy="30" r="3.2" fill="#0d0d12"/><path d="M14 30 L24 17 L34 30" stroke="#0d0d12" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
+      <div class="logo-icon" id="sidebar-avatar"></div>
       <div class="logo-text">HILA</div>
     </div>
-    <button class="new-chat-btn" onclick="newChat()">✏️ Chat baru</button>
-    <div class="sidebar-section">Menu</div>
-    <div class="nav-item active" id="nav-chat" onclick="switchTab('chat'); closeSidebar()">
-      <span>💬</span> Chat AI
+
+    <div class="nav-tabs">
+      <button class="nav-tab-btn active" id="nav-chat" onclick="switchTab('chat')">💬 Chat</button>
+      <button class="nav-tab-btn" id="nav-translate" onclick="switchTab('translate')">🌐 Terjemahan</button>
     </div>
-    <div class="nav-item" id="nav-translate" onclick="switchTab('translate'); closeSidebar()">
-      <span>🌐</span> Terjemahan
-    </div>
+
+    <button class="new-chat-btn" onclick="startNewChat()">✏️ Chat baru</button>
+
+    <div class="sidebar-section">Riwayat chat</div>
+    <div class="history-list" id="history-list"></div>
+
     <div class="sidebar-bottom">
       <div class="user-row">
-        <div class="user-avatar">U</div>
-        <div class="user-name">User</div>
+        <div class="user-avatar" id="user-initial">U</div>
+        <div class="user-name" id="user-name-display">User</div>
+        <button class="switch-user-btn" onclick="switchUser()" title="Ganti pengguna">⇄</button>
       </div>
     </div>
   </div>
 
   <div class="main">
     <div class="topbar">
-      <div class="model-label"><span class="status-dot"></span> HILA 4.7</div>
-      <div class="tab-switcher">
-        <button class="tab-btn active" onclick="switchTab('chat')">💬 Chat</button>
-        <button class="tab-btn" onclick="switchTab('translate')">🌐 Terjemahan</button>
+      <div class="model-label"><span class="status-dot"></span> HILA</div>
+      <div class="web-toggle" id="web-toggle-desktop" onclick="toggleWebSearch()">
+        <span>🌐 Cari web</span>
+        <div class="switch"></div>
       </div>
     </div>
 
     <div id="tab-chat" class="page active">
       <div id="chat-messages">
         <div class="welcome" id="welcome-msg">
-          <div class="welcome-icon">
-            <svg class="logo-mark" viewBox="0 0 48 48"><circle cx="24" cy="17" r="3.2" fill="#0d0d12"/><circle cx="14" cy="30" r="3.2" fill="#0d0d12"/><circle cx="34" cy="30" r="3.2" fill="#0d0d12"/><path d="M14 30 L24 17 L34 30" stroke="#0d0d12" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
+          <div class="welcome-icon" id="welcome-avatar"></div>
           <h1>Halo! Ada yang bisa aku bantu?</h1>
           <p>Tanyakan apa saja — aku siap membantu kamu.</p>
         </div>
       </div>
       <div class="input-area">
+        <div class="mobile-web-toggle web-toggle" id="web-toggle-mobile" onclick="toggleWebSearch()">
+          <span>🌐 Cari web</span>
+          <div class="switch"></div>
+        </div>
         <div class="input-box">
           <textarea id="chat-input" placeholder="Ketik pesan kamu..." rows="1"
             oninput="autoResize(this)"
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"
           ></textarea>
+          <button class="mic-btn" onclick="toggleVoiceInput()" id="mic-btn" title="Input suara">🎤</button>
           <button class="send-btn" onclick="sendChat()" id="send-btn">➤</button>
         </div>
         <div class="input-hint">Enter kirim · Shift+Enter baris baru</div>
@@ -263,8 +340,44 @@
   </div>
 
   <script>
-    const chatHistory = [];
-    const logoSvg = '<svg class="logo-mark" viewBox="0 0 48 48"><circle cx="24" cy="17" r="3.2" fill="#0d0d12"/><circle cx="14" cy="30" r="3.2" fill="#0d0d12"/><circle cx="34" cy="30" r="3.2" fill="#0d0d12"/><path d="M14 30 L24 17 L34 30" stroke="#0d0d12" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const HILA_AVATAR_SVG = `<svg class="hila-mark" viewBox="0 0 100 100"><circle cx="50" cy="54" r="33" fill="#7F77DD"/><ellipse cx="38" cy="48" rx="5" ry="6.2" fill="#0d0d12"/><ellipse cx="62" cy="48" rx="5" ry="6.2" fill="#0d0d12"/><circle cx="39.6" cy="46" r="1.6" fill="#f5f4ef"/><circle cx="63.6" cy="46" r="1.6" fill="#f5f4ef"/><path d="M40 62 Q50 70 60 62" stroke="#0d0d12" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="29" cy="56" r="3.2" fill="#f4a98c" opacity="0.6"/><circle cx="71" cy="56" r="3.2" fill="#f4a98c" opacity="0.6"/><path d="M40 30 Q43 17 53 15" stroke="#9a93e8" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M62 30 Q59 17 49 15" stroke="#9a93e8" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="51" cy="13" r="3" fill="#f4a98c"/></svg>`;
+
+    document.querySelectorAll('#modal-avatar, #topnav-avatar, #sidebar-avatar, #welcome-avatar').forEach(el => el.innerHTML = HILA_AVATAR_SVG);
+
+    let currentSessionId = null;
+    let currentUserName = localStorage.getItem('hila_user_name') || null;
+    let webSearchOn = false;
+
+    function getInitial(name) { return (name || 'U').trim().charAt(0).toUpperCase(); }
+
+    function showNameModal() { document.getElementById('name-modal').style.display = 'flex'; }
+    function hideNameModal() { document.getElementById('name-modal').style.display = 'none'; }
+
+    async function submitName() {
+      const input = document.getElementById('name-input');
+      const name = input.value.trim();
+      if (!name) return;
+      currentUserName = name;
+      localStorage.setItem('hila_user_name', name);
+      hideNameModal();
+      updateUserDisplay();
+      await loadHistoryList();
+      await startNewChat();
+    }
+
+    function switchUser() {
+      localStorage.removeItem('hila_user_name');
+      localStorage.removeItem('hila_session_id');
+      currentUserName = null;
+      currentSessionId = null;
+      document.getElementById('name-input').value = '';
+      showNameModal();
+    }
+
+    function updateUserDisplay() {
+      document.getElementById('user-initial').textContent = getInitial(currentUserName);
+      document.getElementById('user-name-display').textContent = currentUserName || 'User';
+    }
 
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('open');
@@ -278,9 +391,14 @@
     function switchTab(tab) {
       document.getElementById('tab-chat').classList.toggle('active', tab === 'chat');
       document.getElementById('tab-translate').classList.toggle('active', tab === 'translate');
-      document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (i===0)===(tab==='chat')));
       document.getElementById('nav-chat').classList.toggle('active', tab === 'chat');
       document.getElementById('nav-translate').classList.toggle('active', tab === 'translate');
+      closeSidebar();
+    }
+
+    function toggleWebSearch() {
+      webSearchOn = !webSearchOn;
+      document.querySelectorAll('.web-toggle').forEach(el => el.classList.toggle('on', webSearchOn));
     }
 
     function autoResize(el) {
@@ -288,30 +406,94 @@
       el.style.height = Math.min(el.scrollHeight, 120) + 'px';
     }
 
-    function newChat() {
-      chatHistory.length = 0;
+    function showWelcome() {
       document.getElementById('chat-messages').innerHTML = `
         <div class="welcome" id="welcome-msg">
-          <div class="welcome-icon">${logoSvg}</div>
-          <h1>Halo! Ada yang bisa aku bantu?</h1>
+          <div class="welcome-icon">${HILA_AVATAR_SVG}</div>
+          <h1>Halo${currentUserName ? ', ' + currentUserName : ''}! Ada yang bisa aku bantu?</h1>
           <p>Tanyakan apa saja — aku siap membantu kamu.</p>
         </div>`;
+    }
+
+    async function startNewChat() {
+      try {
+        const res = await fetch('/api/session/new', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_name: currentUserName })
+        });
+        const data = await res.json();
+        currentSessionId = data.session_id;
+        localStorage.setItem('hila_session_id', currentSessionId);
+        showWelcome();
+        switchTab('chat');
+        await loadHistoryList();
+      } catch (e) { console.error(e); }
+    }
+
+    async function loadHistoryList() {
+      try {
+        const res = await fetch('/api/sessions?user_name=' + encodeURIComponent(currentUserName));
+        const data = await res.json();
+        const list = document.getElementById('history-list');
+        list.innerHTML = '';
+        data.sessions.forEach(s => {
+          const item = document.createElement('div');
+          item.className = 'history-item' + (s.id === currentSessionId ? ' active' : '');
+          item.innerHTML = `<span class="title">${escapeHtml(s.title)}</span><button class="del-btn" title="Hapus">✕</button>`;
+          item.querySelector('.title').onclick = () => loadSession(s.id);
+          item.querySelector('.del-btn').onclick = (e) => { e.stopPropagation(); deleteSession(s.id); };
+          list.appendChild(item);
+        });
+      } catch (e) { console.error(e); }
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    async function loadSession(sessionId) {
+      currentSessionId = sessionId;
+      localStorage.setItem('hila_session_id', sessionId);
       switchTab('chat');
-      closeSidebar();
+      try {
+        const res = await fetch('/api/session/' + sessionId + '/messages');
+        const data = await res.json();
+        const box = document.getElementById('chat-messages');
+        box.innerHTML = '';
+        if (data.messages.length === 0) {
+          showWelcome();
+        } else {
+          data.messages.forEach(m => {
+            if (m.role === 'user') addUserBubble(m.content, m.id);
+            else addAiBubble(m.content, m.id);
+          });
+        }
+        await loadHistoryList();
+      } catch (e) { console.error(e); }
+    }
+
+    async function deleteSession(sessionId) {
+      try {
+        await fetch('/api/session/' + sessionId, { method: 'DELETE' });
+        if (sessionId === currentSessionId) { await startNewChat(); }
+        else { await loadHistoryList(); }
+      } catch (e) { console.error(e); }
     }
 
     async function sendChat() {
       const input = document.getElementById('chat-input');
       const text = input.value.trim();
-      if (!text) return;
+      if (!text || !currentSessionId) return;
       input.value = '';
       input.style.height = 'auto';
 
       const welcome = document.getElementById('welcome-msg');
       if (welcome) welcome.remove();
 
-      addUserBubble(text);
-      chatHistory.push({ role: 'user', content: text });
+      addUserBubble(text, null);
       const typingEl = addTyping();
       document.getElementById('send-btn').disabled = true;
 
@@ -319,45 +501,202 @@
         const res = await fetch('/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: chatHistory })
+          body: JSON.stringify({ session_id: currentSessionId, message: text, web_search: webSearchOn })
         });
         const data = await res.json();
         typingEl.remove();
-        addAiBubble(data.reply);
-        chatHistory.push({ role: 'assistant', content: data.reply });
+        addAiBubble(data.reply, data.ai_msg_id);
+        const userBubbles = document.querySelectorAll('.msg-user-wrap');
+        if (userBubbles.length && data.user_msg_id) userBubbles[userBubbles.length - 1].dataset.msgId = data.user_msg_id;
+        await loadHistoryList();
       } catch(e) {
         typingEl.remove();
-        addAiBubble('Maaf, error anjg. Coba lagi ya!');
+        addAiBubble('Maaf, terjadi error. Coba lagi ya!', null);
       }
       document.getElementById('send-btn').disabled = false;
     }
 
-    function addUserBubble(text) {
+    function addUserBubble(text, msgId) {
       const box = document.getElementById('chat-messages');
       const row = document.createElement('div');
       row.className = 'message-row';
-      row.innerHTML = `<div class="msg-user"><div class="bubble">${text}</div></div>`;
+      row.innerHTML = `
+        <div class="msg-user">
+          <div class="msg-user-wrap" data-msg-id="${msgId || ''}">
+            <div class="bubble-view">
+              <div class="bubble">${escapeHtml(text)}</div>
+              <div class="user-actions">
+                <button class="icon-btn edit-trigger">✏️ Edit</button>
+                <button class="icon-btn del-trigger">🗑️ Hapus</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      const wrap = row.querySelector('.msg-user-wrap');
+      wrap.querySelector('.edit-trigger').onclick = () => startEdit(wrap, text);
+      wrap.querySelector('.del-trigger').onclick = () => confirmDeleteMessage(wrap);
       box.appendChild(row);
       box.scrollTop = box.scrollHeight;
     }
 
-    function addAiBubble(text) {
+    function startEdit(wrap, originalText) {
+      wrap.innerHTML = `
+        <textarea class="edit-box" rows="2">${escapeHtml(originalText)}</textarea>
+        <div class="edit-confirm-row">
+          <button class="icon-btn confirm-yes">✓ Kirim ulang</button>
+          <button class="icon-btn confirm-no">✕ Batal</button>
+        </div>`;
+      const textarea = wrap.querySelector('.edit-box');
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+      textarea.focus();
+      wrap.querySelector('.confirm-no').onclick = () => addUserBubble(originalText, wrap.dataset.msgId) && wrap.closest('.message-row').remove();
+      wrap.querySelector('.confirm-no').onclick = () => {
+        const row = wrap.closest('.message-row');
+        const newRow = document.createElement('div');
+        newRow.className = 'message-row';
+        newRow.innerHTML = row.innerHTML;
+        row.replaceWith(newRow);
+        const newWrap = newRow.querySelector('.msg-user-wrap');
+        newWrap.innerHTML = `<div class="bubble-view"><div class="bubble">${escapeHtml(originalText)}</div><div class="user-actions"><button class="icon-btn edit-trigger">✏️ Edit</button><button class="icon-btn del-trigger">🗑️ Hapus</button></div></div>`;
+        newWrap.querySelector('.edit-trigger').onclick = () => startEdit(newWrap, originalText);
+        newWrap.querySelector('.del-trigger').onclick = () => confirmDeleteMessage(newWrap);
+      };
+      wrap.querySelector('.confirm-yes').onclick = async () => {
+        const newText = textarea.value.trim();
+        if (!newText) return;
+        const msgId = wrap.dataset.msgId;
+        const row = wrap.closest('.message-row');
+        let allRows = Array.from(document.querySelectorAll('#chat-messages > .message-row'));
+        const idx = allRows.indexOf(row);
+        for (let i = allRows.length - 1; i >= idx; i--) { allRows[i].remove(); }
+        if (msgId) { try { await fetch('/api/message/' + msgId, { method: 'DELETE' }); } catch(e) {} }
+        document.getElementById('chat-input').value = newText;
+        await sendChat();
+      };
+    }
+
+    function confirmDeleteMessage(wrap) {
+      const viewDiv = wrap.querySelector('.bubble-view');
+      const original = viewDiv.innerHTML;
+      viewDiv.innerHTML = `<div class="bubble">Hapus pesan ini dan semua balasan setelahnya?</div><div class="user-actions" style="opacity:1"><button class="icon-btn confirm-yes">✓ Ya, hapus</button><button class="icon-btn confirm-no">✕ Batal</button></div>`;
+      viewDiv.querySelector('.confirm-no').onclick = () => { viewDiv.innerHTML = original; rebindUserActions(wrap); };
+      viewDiv.querySelector('.confirm-yes').onclick = async () => {
+        const msgId = wrap.dataset.msgId;
+        const row = wrap.closest('.message-row');
+        let allRows = Array.from(document.querySelectorAll('#chat-messages > .message-row'));
+        const idx = allRows.indexOf(row);
+        for (let i = allRows.length - 1; i >= idx; i--) { allRows[i].remove(); }
+        if (msgId) { try { await fetch('/api/message/' + msgId, { method: 'DELETE' }); } catch(e) {} }
+        if (!document.querySelector('#chat-messages > .message-row')) showWelcome();
+        await loadHistoryList();
+      };
+    }
+
+    function rebindUserActions(wrap) {
+      const text = wrap.querySelector('.bubble').textContent;
+      wrap.querySelector('.edit-trigger').onclick = () => startEdit(wrap, text);
+      wrap.querySelector('.del-trigger').onclick = () => confirmDeleteMessage(wrap);
+    }
+
+    function addAiBubble(text, msgId) {
       const box = document.getElementById('chat-messages');
       const row = document.createElement('div');
       row.className = 'message-row';
-      row.innerHTML = `<div class="msg-ai"><div class="ai-avatar">${logoSvg}</div><div class="bubble">${marked.parse(text)}</div></div>`;
+      row.innerHTML = `
+        <div class="msg-ai">
+          <div class="ai-avatar">${HILA_AVATAR_SVG}</div>
+          <div class="msg-ai-wrap" data-msg-id="${msgId || ''}">
+            <div class="bubble">${marked.parse(text)}</div>
+            <div class="ai-actions">
+              <button class="icon-btn copy-trigger">📋 Copy</button>
+              <button class="icon-btn regen-trigger">🔄 Regenerate</button>
+            </div>
+          </div>
+        </div>`;
+      const wrap = row.querySelector('.msg-ai-wrap');
+      wrap.querySelector('.copy-trigger').onclick = (e) => copyText(text, e.target);
+      wrap.querySelector('.regen-trigger').onclick = () => regenerate(wrap, msgId);
       box.appendChild(row);
       box.scrollTop = box.scrollHeight;
+    }
+
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✓ Disalin';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1500);
+      });
+    }
+
+    async function regenerate(wrap, aiMsgId) {
+      const row = wrap.closest('.message-row');
+      const typingHtml = `<div class="msg-ai"><div class="ai-avatar">${HILA_AVATAR_SVG}</div><div class="msg-ai-wrap"><div class="bubble"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div></div>`;
+      row.innerHTML = typingHtml;
+      try {
+        const res = await fetch('/api/regenerate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: currentSessionId, ai_message_id: aiMsgId, web_search: webSearchOn })
+        });
+        const data = await res.json();
+        row.remove();
+        addAiBubble(data.reply, data.ai_msg_id);
+      } catch(e) {
+        row.remove();
+        addAiBubble('Maaf, gagal regenerate. Coba lagi ya!', null);
+      }
     }
 
     function addTyping() {
       const box = document.getElementById('chat-messages');
       const row = document.createElement('div');
       row.className = 'message-row';
-      row.innerHTML = `<div class="msg-ai"><div class="ai-avatar">${logoSvg}</div><div class="bubble"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>`;
+      row.innerHTML = `<div class="msg-ai"><div class="ai-avatar">${HILA_AVATAR_SVG}</div><div class="bubble"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>`;
       box.appendChild(row);
       box.scrollTop = box.scrollHeight;
       return row;
+    }
+
+    let recognition = null;
+    let isRecording = false;
+    function setupVoiceInput() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        document.getElementById('mic-btn').style.display = 'none';
+        return;
+      }
+      recognition = new SpeechRecognition();
+      recognition.lang = 'id-ID';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        const input = document.getElementById('chat-input');
+        input.value = (input.value ? input.value + ' ' : '') + transcript;
+        autoResize(input);
+      };
+      recognition.onend = () => {
+        isRecording = false;
+        document.getElementById('mic-btn').classList.remove('recording');
+      };
+      recognition.onerror = () => {
+        isRecording = false;
+        document.getElementById('mic-btn').classList.remove('recording');
+      };
+    }
+
+    function toggleVoiceInput() {
+      if (!recognition) return;
+      if (isRecording) {
+        recognition.stop();
+      } else {
+        isRecording = true;
+        document.getElementById('mic-btn').classList.add('recording');
+        recognition.start();
+      }
     }
 
     async function doTranslate() {
@@ -384,6 +723,19 @@
       }
       btn.disabled = false;
     }
+
+    async function init() {
+      setupVoiceInput();
+      if (!currentUserName) { showNameModal(); return; }
+      hideNameModal();
+      updateUserDisplay();
+      await loadHistoryList();
+      const savedSession = localStorage.getItem('hila_session_id');
+      if (savedSession) { await loadSession(savedSession); }
+      else { await startNewChat(); }
+    }
+
+    init();
   </script>
 </body>
 </html>
