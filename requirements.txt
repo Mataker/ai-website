@@ -3,3 +3,5 @@ flask-cors
 openai
 gunicorn
 python-dotenv
+pypdf
+requests
